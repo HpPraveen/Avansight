@@ -25,11 +25,12 @@ namespace Avansight.Domain
             sqlCon.Execute(sp, parm, commandType: CommandType.StoredProcedure);
         }
 
-        public static IEnumerable<T> Query<T>(string sp, DynamicParameters parm)
+        public static IEnumerable<T> Query<T>(string sp, DynamicParameters parm = null)
         {
             using SqlConnection sqlCon = new SqlConnection(con);
             sqlCon.Open();
-            return sqlCon.Query<T>(sp, parm, commandType: CommandType.StoredProcedure);
+            var result = sqlCon.Query<T>(sp, parm, commandType: CommandType.StoredProcedure);
+            return result;
         }
     }
 }

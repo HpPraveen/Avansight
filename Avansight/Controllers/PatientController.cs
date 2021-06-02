@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Avansight.Domain;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace Avansight.Controllers
     {
         public IActionResult Index()
         {
+            var getPatients= DataAccessService.Query<Patient>("PatientGet");
             return View();
         }
     }
