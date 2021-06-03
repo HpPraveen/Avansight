@@ -21,14 +21,14 @@ CREATE TABLE TreatmentReading (
 ---------------------User Defined Tables---------------------
 CREATE TYPE PatientTableType AS TABLE
 (
-	PatientId int IDENTITY(1,1) PRIMARY KEY,
+	PatientId int PRIMARY KEY,
     Age int,
     Gender varchar(10)   
 );
 
 CREATE TYPE TreatmentReadingTableType AS TABLE
 (
-	TreatmentReadingId int IDENTITY(1,1) PRIMARY KEY,
+	TreatmentReadingId int PRIMARY KEY,
     VisitWeek varchar(10),
     Reading decimal(6,2),
     PatientId int
@@ -39,13 +39,13 @@ CREATE TYPE TreatmentReadingTableType AS TABLE
 CREATE PROC PatientSet
 @Patients AS PatientTableType READONLY
 AS
-BEGIN 
+BEGIN	
 	INSERT INTO Patient
-	SELECT * FROM @Patients
+	SELECT * FROM @Patients		
 END
 
 CREATE PROC PatientGet
---@Patients AS PatientTableType READONLY
+@Patients AS PatientTableType READONLY
 AS
 BEGIN 
 	SELECT * FROM Patient
@@ -61,7 +61,7 @@ BEGIN
 END
 
 CREATE PROC TreatmentReadingsGet
---@TreatmentReadings AS TreatmentReadingTableType READONLY
+@TreatmentReadings AS TreatmentReadingTableType READONLY
 AS
 BEGIN 
 	SELECT * FROM TreatmentReading

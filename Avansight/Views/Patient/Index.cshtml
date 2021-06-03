@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Avansight.Domain.Patient>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Patient Details";
 }
 
 <h1>Simulate Patient</h1>
@@ -36,19 +36,73 @@
                     <input class="col-sm-2" type="number" min="1" id="ageGrp3">
                     <input class="col-sm-2" type="number" min="1" id="ageGrp4">
                     <input class="col-sm-2" type="number" min="1" id="ageGrp5">
-                
+
                 </div>
             </div>
-            <hr/>
-            <button type="submit" class="btn btn-primary">Generate Patient</button>
+            <hr />
+            <button type="submit" class="btn btn-primary" id="generatePatient">Generate Patient</button>
+            <hr />
+            <div id="partialView"></div>
+            <hr />
         </form>
     </div>
 </div>
 
 <div>
-  
+
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+
+
+<script type="text/javascript">
+
+    $(function () {
+            $("#partialView").load('@Url.Content("/Patient/PatientData")'); 
+            GetPatientData();
+        });
+
+        function GetPatientData() {
+            $("#generatePatient").click(function () {
+
+                var sampleSizeValue = $("#sampleSize").val();
+                var maleWeightValue = $("#maleW").val();
+                var femaleWeightValue = $("#femaleW").val();
+                var ageGrp1Value = $("#ageGrp1").val();
+                var ageGrp2Value = $("#ageGrp2").val();
+                var ageGrp3Value = $("#ageGrp3").val();
+                var ageGrp4Value = $("#ageGrp4").val();
+                var ageGrp5Value = $("#ageGrp5").val();
+
+                var ageGrpValue = {};
+                ageGrpValue.AgeGroup1 = ageGrp1Value;
+                ageGrpValue.AgeGroup2 = ageGrp2Value;
+                ageGrpValue.AgeGroup3 = ageGrp3Value;
+                ageGrpValue.AgeGroup4 = ageGrp4Value;
+                ageGrpValue.AgeGroup5 = ageGrp5Value;
+
+                if (sampleSizeValue !== "") {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("GetPatientData")',
+                        data: { sampleSize: sampleSizeValue, maleWeight: maleWeightValue, femaleWeight: femaleWeightValue, ageGroupData: ageGrpValue},
+                        dataType: "json",
+                        success: function (data) {
+                            debugger;
+                            var c = data;
+                            @*$("#partialView").load('@Url.Content("/Patient/PatientData")');*@ 
+                            alert("Data has been added successfully.");
+                        },
+                        error: function() {
+                            alert("Error while inserting data");
+                        }
+                    });
+                } else {
+                    alert("Please add a Sample Size");
+                }
+            });
+        }
+</script>
 }
+
