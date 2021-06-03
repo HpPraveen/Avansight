@@ -9,27 +9,27 @@ namespace Avansight.Domain
 {
     public class DataAccessService
     {
-        private static string con = @"Data Source=HOWPAGE\PRAVEEN;Initial Catalog=PatientDB;Integrated Security=True";
-            
-        public static T ExecuteScalar<T>(string sp, DynamicParameters parm)
+        private const string Con = @"Data Source=HOWPAGE\PRAVEEN;Initial Catalog=PatientDB;Integrated Security=True";
+
+        public static T ExecuteScalar<T>(string sp, DynamicParameters param)
         {
-            using SqlConnection sqlCon = new SqlConnection(con);
+            using var sqlCon = new SqlConnection(Con);
             sqlCon.Open();
-            return (T)Convert.ChangeType(sqlCon.ExecuteScalar(sp, parm, commandType: CommandType.StoredProcedure), typeof(T));
+            return (T)Convert.ChangeType(sqlCon.ExecuteScalar(sp, param, commandType: CommandType.StoredProcedure), typeof(T));
         }
 
-        public static void Execute<T>(string sp, DynamicParameters parm)
+        public static void Execute<T>(string sp, DynamicParameters param)
         {
-            using SqlConnection sqlCon = new SqlConnection(con);
+            using var sqlCon = new SqlConnection(Con);
             sqlCon.Open();
-            sqlCon.Execute(sp, parm, commandType: CommandType.StoredProcedure);
+            sqlCon.Execute(sp, param, commandType: CommandType.StoredProcedure);
         }
 
-        public static IEnumerable<T> Query<T>(string sp, DynamicParameters parm = null)
+        public static IEnumerable<T> Query<T>(string sp, DynamicParameters param = null)
         {
-            using SqlConnection sqlCon = new SqlConnection(con);
+            using var sqlCon = new SqlConnection(Con);
             sqlCon.Open();
-            var result = sqlCon.Query<T>(sp, parm, commandType: CommandType.StoredProcedure);
+            var result = sqlCon.Query<T>(sp, param, commandType: CommandType.StoredProcedure);
             return result;
         }
     }

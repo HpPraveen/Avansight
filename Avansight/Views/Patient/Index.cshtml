@@ -1,4 +1,4 @@
-﻿@model Avansight.Domain.Patient
+﻿@model IEnumerable<Avansight.Domain.Patient>
 
 @{
     ViewData["Title"] = "Index";
@@ -8,7 +8,7 @@
 
 <hr />
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-6">
         <form asp-action="Index">
             <div class="form-group row">
                 <label class="col-sm-4 col-form-label">Sample Size:</label>
@@ -31,11 +31,11 @@
                     <label class="col-sm-2 col-form-label">41-50</label>
                     <label class="col-sm-2 col-form-label">51-60</label>
                     <label class="col-sm-2 col-form-label">61-70</label>
-                    <input class="col-sm-2" type="number" min="21" max="30" id="ageGrp1">
-                    <input class="col-sm-2" type="number" min="31" max="40" id="ageGrp2">
-                    <input class="col-sm-2" type="number" min="41" max="50" id="ageGrp3">
-                    <input class="col-sm-2" type="number" min="51" max="60" id="ageGrp4">
-                    <input class="col-sm-2" type="number" min="61" max="70" id="ageGrp5">
+                    <input class="col-sm-2" type="number" min="1" id="ageGrp1">
+                    <input class="col-sm-2" type="number" min="1" id="ageGrp2">
+                    <input class="col-sm-2" type="number" min="1" id="ageGrp3">
+                    <input class="col-sm-2" type="number" min="1" id="ageGrp4">
+                    <input class="col-sm-2" type="number" min="1" id="ageGrp5">
                 
                 </div>
             </div>

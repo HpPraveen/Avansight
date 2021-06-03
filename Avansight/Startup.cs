@@ -8,6 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Avansight.Business_Layer;
+using Avansight.Domain;
+using Avansight.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Avansight
 {
@@ -24,6 +28,12 @@ namespace Avansight
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContext<ApplicationDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("AvansightDBCon")));
+
+            services.AddScoped<SqlDbConnection>();
+            services.AddScoped<PatientService>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
