@@ -6,7 +6,7 @@
 
 <h1>Simulate Patient</h1>
 
-<hr />
+<hr/>
 <div class="row">
     <div class="col-md-6">
         <form asp-action="Index">
@@ -39,11 +39,11 @@
 
                 </div>
             </div>
-            <hr />
+            <hr/>
             <button type="submit" class="btn btn-primary" id="generatePatient">Generate Patient</button>
-            <hr />
+            <hr/>
             <div id="partialView"></div>
-            <hr />
+            <hr/>
         </form>
     </div>
 </div>
@@ -55,16 +55,17 @@
 @section Scripts {
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    $(function () {
-            $("#partialView").load('@Url.Content("/Patient/PatientData")'); 
+        $(function() {
+            @*$("#partialView").load('@Url.Content("/Patient/PatientData")');*@
             GetPatientData();
         });
 
         function GetPatientData() {
-            $("#generatePatient").click(function () {
+            $("#generatePatient").click(function() {
 
                 var sampleSizeValue = $("#sampleSize").val();
                 var maleWeightValue = $("#maleW").val();
@@ -82,27 +83,26 @@
                 ageGrpValue.AgeGroup4 = ageGrp4Value;
                 ageGrpValue.AgeGroup5 = ageGrp5Value;
 
-                if (sampleSizeValue !== "") {
+                if (sampleSizeValue === "") {
+                    alert("Please add a Sample Size");
+                } else {
                     $.ajax({
                         type: "POST",
-                        url: '@Url.Action("GetPatientData")',
-                        data: { sampleSize: sampleSizeValue, maleWeight: maleWeightValue, femaleWeight: femaleWeightValue, ageGroupData: ageGrpValue},
-                        dataType: "json",
-                        success: function (data) {
-                            debugger;
-                            var c = data;
-                            @*$("#partialView").load('@Url.Content("/Patient/PatientData")');*@ 
+                        dataType: "html",
+                        url: '@Url.Action("GetPatientData", "Patient")',
+                        data: { sampleSize: sampleSizeValue, maleWeight: maleWeightValue, femaleWeight: femaleWeightValue, ageGroupData: ageGrpValue },
+                        success: function(data) {
+                            var patientDetails = data;
+                            $("#partialView").html(patientDetails);
                             alert("Data has been added successfully.");
                         },
                         error: function() {
                             alert("Error while inserting data");
                         }
                     });
-                } else {
-                    alert("Please add a Sample Size");
                 }
+                return false;
             });
         }
-</script>
+    </script>
 }
-

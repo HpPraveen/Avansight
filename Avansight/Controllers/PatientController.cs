@@ -26,8 +26,8 @@ namespace Avansight.Controllers
         [HttpPost]
         public ActionResult GetPatientData(decimal sampleSize, decimal maleWeight, decimal femaleWeight, AgeGroupData ageGroupData)
         {
-            var noOfMales = maleWeight / (maleWeight + femaleWeight) * sampleSize;
-            var noOfFemales = femaleWeight / (maleWeight + femaleWeight) * sampleSize;
+            //var noOfMales = maleWeight / (maleWeight + femaleWeight) * sampleSize;
+            //var noOfFemales = femaleWeight / (maleWeight + femaleWeight) * sampleSize;
 
             var dt = new DataTable();
 
@@ -52,12 +52,7 @@ namespace Avansight.Controllers
 
             _patientService.AddPatients(dt);
 
-            return Json(new {getPatients});
-        }
-
-        public PartialViewResult PatientData()
-        {
-            return PartialView("_SimulatePatient");
+            return PartialView("_SimulatePatient", getPatients);
         }
     }
 }
