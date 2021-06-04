@@ -1,10 +1,24 @@
-﻿@model IEnumerable<Avansight.Domain.DTO.PatientDetailsDto>
-<div class="row">  
+﻿@model IEnumerable<Avansight.Domain.Patient>
 
-<div id="barChart"></div>
-<div id="pieChart"></div>
-
-</div>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Patient Id</th>
+        <th>@Html.DisplayNameFor(m => m.Gender)</th>
+        <th>@Html.DisplayNameFor(m => m.Age)</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var p in Model)
+        {
+            <tr>  
+                <td>@p.PatientId</td>
+                <td>@p.Gender</td>
+                <td>@p.Age</td>
+            </tr>
+        }
+    </tbody>
+</table> 
 
 
 @section Scripts {
@@ -14,9 +28,7 @@
 
     <script type="text/javascript">
 
-        $(function() {
-          
-        }); 
+
 
     </script>
 }

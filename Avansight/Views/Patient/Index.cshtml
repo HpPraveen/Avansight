@@ -97,9 +97,8 @@
                         type: "POST",
                         dataType: "html",
                         url: '@Url.Action("GetPatientData", "Patient")',
-                        data: { sampleSize: sampleSizeValue, maleWeight: maleWeightValue, femaleWeight: femaleWeightValue, ageGroupData: ageGrpValue },
+                        data: { sampleSize: sampleSizeValue, maleWeight: maleWeightValue, femaleWeight: femaleWeightValue, patientDetails: ageGrpValue },
                         success: function(data) {
-                            //$("#partialView").html(patientDetails);
                             BarChart(data);
                             $("#saveGenerate").show();
                             $("#generatePatient").hide();
@@ -113,9 +112,9 @@
             });
         }
 
-        function BarChart(d) {
+        function BarChart(patientData) {
 
-            var ageGrp = JSON.parse(d);
+            var ageGrp = JSON.parse(patientData);
 
             var data = {
                 rows: [
@@ -191,11 +190,9 @@
                     dataType: "html",
                     url: '@Url.Action("SavePatientData", "Patient")',
                     success: function (data) {
-                        if (data === 'OK') {
-                            alert("Successfully Saved !");
-                        } else {
-                            alert("Error while inserting data");
-                        }
+                        $("#partialView").html(data);
+                        $("#barChart").hide();
+                        $("#pieChart").hide();
                     },
                     error: function() {
                         alert("Error while inserting data");
