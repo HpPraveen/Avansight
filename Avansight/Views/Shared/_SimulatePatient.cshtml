@@ -1,20 +1,22 @@
-﻿@model IEnumerable<Avansight.Domain.Patient>
+﻿@model IEnumerable<Avansight.Domain.DTO.PatientDetailsDto>
+<div class="row">  
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(m => m.Gender)</th>
-            <th>@Html.DisplayNameFor(m => m.Age)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var patient in Model)
-        {
-            <tr>
-                <td>@patient.Gender</td>
-                <td>@patient.Age</td>
-            </tr>
+<div id="barChart"></div>
+<div id="pieChart"></div>
 
-        }
-    </tbody>
-</table>  
+</div>
+
+
+@section Scripts {
+
+    <script src="~/lib/domo-phoenix/build/global/domoPhoenix.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(function() {
+          
+        }); 
+
+    </script>
+}

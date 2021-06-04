@@ -39,29 +39,36 @@
 
                 </div>
             </div>
-            <hr/>
+            <br/>
             <button type="submit" class="btn btn-primary" id="generatePatient">Generate Patient</button>
-            <hr/>
+            <button type="submit" class="btn badge-success" id="saveGenerate">Save Generated Records</button>  
+            <button type="submit" class="btn border-primary" id="cancel">cancel</button>
+
             <div id="partialView"></div>
-            <hr/>
         </form>
     </div>
 </div>
-
-<div>
-
+<hr/>
+<div class="row">
+    <div class="col-md-6" id="barChart"></div>
+    <div class="col-md-1"></div>
+    <div class="col-md-5" id="pieChart"></div>
 </div>
 
-@section Scripts {
-    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
 
+@section Scripts {
+
+    <script src="~/lib/domo-phoenix/build/global/domoPhoenix.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script type="text/javascript">
 
         $(function() {
-            @*$("#partialView").load('@Url.Content("/Patient/PatientData")');*@
+            $("#generatePatient").show();
+            $("#saveGenerate").hide();
             GetPatientData();
+            SavePatientData();
+            ClearData();
         });
 
         function GetPatientData() {
@@ -77,11 +84,11 @@
                 var ageGrp5Value = $("#ageGrp5").val();
 
                 var ageGrpValue = {};
-                ageGrpValue.AgeGroup1 = ageGrp1Value;
-                ageGrpValue.AgeGroup2 = ageGrp2Value;
-                ageGrpValue.AgeGroup3 = ageGrp3Value;
-                ageGrpValue.AgeGroup4 = ageGrp4Value;
-                ageGrpValue.AgeGroup5 = ageGrp5Value;
+                ageGrpValue.NoOfPersonsInAgeGroup1 = ageGrp1Value;
+                ageGrpValue.NoOfPersonsInAgeGroup2 = ageGrp2Value;
+                ageGrpValue.NoOfPersonsInAgeGroup3 = ageGrp3Value;
+                ageGrpValue.NoOfPersonsInAgeGroup4 = ageGrp4Value;
+                ageGrpValue.NoOfPersonsInAgeGroup5 = ageGrp5Value;
 
                 if (sampleSizeValue === "") {
                     alert("Please add a Sample Size");
@@ -92,9 +99,10 @@
                         url: '@Url.Action("GetPatientData", "Patient")',
                         data: { sampleSize: sampleSizeValue, maleWeight: maleWeightValue, femaleWeight: femaleWeightValue, ageGroupData: ageGrpValue },
                         success: function(data) {
-                            var patientDetails = data;
-                            $("#partialView").html(patientDetails);
-                            alert("Data has been added successfully.");
+                            //$("#partialView").html(patientDetails);
+                            BarChart(data);
+                            $("#saveGenerate").show();
+                            $("#generatePatient").hide();
                         },
                         error: function() {
                             alert("Error while inserting data");
@@ -104,5 +112,105 @@
                 return false;
             });
         }
+
+        function BarChart(d) {
+
+            var ageGrp = JSON.parse(d);
+
+            var data = {
+                rows: [
+                    ['First Age Group', '21-30', ageGrp.noOfPersonsInAgeGroup1],
+                    ['Second Age Group', '31-40', ageGrp.noOfPersonsInAgeGroup2],
+                    ['Third Age Group', '41-50', ageGrp.noOfPersonsInAgeGroup3],
+                    ['Forth Age Group', '51-60', ageGrp.noOfPersonsInAgeGroup4],
+                    ['Fifth Age Group', '61-70', ageGrp.noOfPersonsInAgeGroup5]
+                ],
+                columns: [
+                    {
+                        type: DomoPhoenix.DATA_TYPE.STRING,
+                        name: 'name',
+                        mapping: DomoPhoenix.MAPPING.SERIES
+                    },
+                    {
+                        type: DomoPhoenix.DATA_TYPE.STRING,
+                        name: 'type',
+                        mapping: DomoPhoenix.MAPPING.ITEM
+                    },
+                    {
+                        type: DomoPhoenix.DATA_TYPE.DOUBLE,
+                        name: 'value',
+                        mapping: DomoPhoenix.MAPPING.VALUE
+                    }
+                ]
+            };
+
+            var options = {
+                width: 600,
+                height: 500
+            };
+
+            var chart = new DomoPhoenix.Chart(DomoPhoenix.CHART_TYPE.BAR, data, options);
+
+            document.getElementById("barChart").appendChild(chart.canvas);
+            chart.render();
+
+            PieChart(ageGrp.noOfMales, ageGrp.noOfFemales);
+        }
+
+        function PieChart(noOfMales, noOfFemales) {
+
+            var data = {
+                rows: [
+                    ['Male', noOfMales],
+                    ['Female', noOfFemales]
+                ],
+                columns: [
+                    {
+                        type: DomoPhoenix.DATA_TYPE.STRING,
+                        name: 'type',
+                        mapping: DomoPhoenix.MAPPING.ITEM
+                    },
+                    {
+                        type: DomoPhoenix.DATA_TYPE.DOUBLE,
+                        name: 'value',
+                        mapping: DomoPhoenix.MAPPING.VALUE
+                    }
+                ]
+            };
+            var options = {};
+            var chart = new DomoPhoenix.Chart(DomoPhoenix.CHART_TYPE.PIE, data, options);
+
+            document.getElementById("pieChart").appendChild(chart.canvas);
+            chart.render();
+        }
+
+        function SavePatientData() {
+            $("#saveGenerate").click(function() {
+                $.ajax({
+                    type: "POST",
+                    dataType: "html",
+                    url: '@Url.Action("SavePatientData", "Patient")',
+                    success: function (data) {
+                        if (data === 'OK') {
+                            alert("Successfully Saved !");
+                        } else {
+                            alert("Error while inserting data");
+                        }
+                    },
+                    error: function() {
+                        alert("Error while inserting data");
+                    }
+                });
+                return false;
+            });
+        }
+
+
+        function ClearData() {
+            $("#cancel").click(function() {
+                location.reload();
+            });
+        }
+
     </script>
 }
