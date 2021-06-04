@@ -1,0 +1,41 @@
+﻿@model Avansight.Domain.TreatmentReading
+
+@{
+    ViewData["Title"] = "Treatment";
+}
+
+<h1>Treatment</h1>
+
+<div>
+    <h4>TreatmentReading</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TreatmentReadingId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TreatmentReadingId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.VisitWeek)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.VisitWeek)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Reading)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Reading)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PatientId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PatientId)
+        </dd>
+    </dl>
+</div>
+<div>
+  
+</div>
