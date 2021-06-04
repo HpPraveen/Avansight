@@ -40,10 +40,10 @@
                 </div>
             </div>
             <br/>
-            <button type="submit" class="btn btn-primary" id="generatePatient">Generate Patient</button>
-            <button type="submit" class="btn badge-success" id="saveGenerate">Save Generated Records</button>  
-            <button type="submit" class="btn border-primary" id="cancel">cancel</button>
-
+            <button type="submit" class="btn btn-info" id="generatePatient">Generate Patient</button>
+            <button type="submit" class="btn btn-success" id="saveGenerate">Save Generated Records</button>  
+            <button type="submit" class="btn btn-secondary" id="cancel">Cancel</button>
+            <br/>
             <div id="partialView"></div>
         </form>
     </div>
@@ -191,6 +191,8 @@
                     url: '@Url.Action("SavePatientData", "Patient")',
                     success: function (data) {
                         $("#partialView").html(data);
+                        $("#partialView").html(data);
+                        $("#saveGenerate").hide();
                         $("#barChart").hide();
                         $("#pieChart").hide();
                     },
@@ -201,7 +203,6 @@
                 return false;
             });
         }
-
 
         function ClearData() {
             $("#cancel").click(function() {

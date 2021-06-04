@@ -39,7 +39,7 @@ CREATE PROC PatientSet
 @Patients AS PatientTableType READONLY
 AS
 BEGIN	
-	INSERT INTO Patient
+	INSERT INTO Patient	OUTPUT INSERTED.PatientId,INSERTED.Age,INSERTED.Gender
 	SELECT * FROM @Patients		
 END
 ----------------------------------------

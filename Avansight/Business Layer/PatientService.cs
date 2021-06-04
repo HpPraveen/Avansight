@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
 using Avansight.Domain;
 using Avansight.Domain.DTO;
 using Dapper;
-using Microsoft.AspNetCore.Http;
 
 namespace Avansight.Business_Layer
 {
@@ -16,17 +13,18 @@ namespace Avansight.Business_Layer
         private readonly RandomAgeGeneratorService _randomAgeGeneratorService;
 
         public PatientService(RandomAgeGeneratorService randomAgeGeneratorService)
-        { 
+        {
             _randomAgeGeneratorService = randomAgeGeneratorService;
         }
 
-        public IEnumerable<Patient> GetPatients ()
+        public IEnumerable<Patient> GetPatients()
         {
             var result = DataAccessService.Query<Patient>("PatientGet");
             return result.ToList();
         }
 
-        public PatientDetailsDto CalculatePatientDetails(decimal sampleSize, decimal maleWeight, decimal femaleWeight, PatientDetailsDto patientDetails)
+        public PatientDetailsDto CalculatePatientDetails(decimal sampleSize, decimal maleWeight, decimal femaleWeight,
+            PatientDetailsDto patientDetails)
         {
             #region Logic
 
@@ -35,7 +33,9 @@ namespace Avansight.Business_Layer
             var noOfMales = Math.Round(maleWeight / totalPersonsWeight * sampleSize);
             var noOfFemales = Math.Round(femaleWeight / totalPersonsWeight * sampleSize);
 
-            var totalAgeGrpWeight = patientDetails.NoOfPersonsInAgeGroup1 + patientDetails.NoOfPersonsInAgeGroup2 + patientDetails.NoOfPersonsInAgeGroup3 + patientDetails.NoOfPersonsInAgeGroup4 + patientDetails.NoOfPersonsInAgeGroup5;
+            var totalAgeGrpWeight = patientDetails.NoOfPersonsInAgeGroup1 + patientDetails.NoOfPersonsInAgeGroup2 +
+                                    patientDetails.NoOfPersonsInAgeGroup3 + patientDetails.NoOfPersonsInAgeGroup4 +
+                                    patientDetails.NoOfPersonsInAgeGroup5;
 
             var noOfMalesInAgeGrp1 = Math.Round(patientDetails.NoOfPersonsInAgeGroup1 / totalAgeGrpWeight * noOfMales);
             var noOfMalesInAgeGrp2 = Math.Round(patientDetails.NoOfPersonsInAgeGroup2 / totalAgeGrpWeight * noOfMales);
@@ -84,26 +84,27 @@ namespace Avansight.Business_Layer
             return patientDetailsDto;
         }
 
-        public void AddPatients(int noOfMalesInAgeGrp1, int noOfMalesInAgeGrp2, int noOfMalesInAgeGrp3, 
-            int noOfMalesInAgeGrp4, int noOfMalesInAgeGrp5, int noOfFemalesInAgeGrp1, 
-            int noOfFemalesInAgeGrp2, int noOfFemalesInAgeGrp3, int noOfFemalesInAgeGrp4, int noOfFemalesInAgeGrp5)
+        public IEnumerable<Patient> AddPatients(PatientDetailsDto sessionPatientDetails)
         {
+            #region Random age generator for  male & female age-groups
 
-            var rndMaleAgesForAgeGrp1 = _randomAgeGeneratorService.RandomAgeGenerator(21, 30, noOfMalesInAgeGrp1);
-            var rndMaleAgesForAgeGrp2 = _randomAgeGeneratorService.RandomAgeGenerator(31, 40, noOfMalesInAgeGrp2);
-            var rndMaleAgesForAgeGrp3 = _randomAgeGeneratorService.RandomAgeGenerator(41, 50, noOfMalesInAgeGrp3);
-            var rndMaleAgesForAgeGrp4 = _randomAgeGeneratorService.RandomAgeGenerator(51, 60, noOfMalesInAgeGrp4);
-            var rndMaleAgesForAgeGrp5 = _randomAgeGeneratorService.RandomAgeGenerator(61, 70, noOfMalesInAgeGrp5);
+            var rndMaleAgesForAgeGrp1 = _randomAgeGeneratorService.RandomAgeGenerator(21, 30, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup1));
+            var rndMaleAgesForAgeGrp2 = _randomAgeGeneratorService.RandomAgeGenerator(31, 40, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup2));
+            var rndMaleAgesForAgeGrp3 = _randomAgeGeneratorService.RandomAgeGenerator(41, 50, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup3));
+            var rndMaleAgesForAgeGrp4 = _randomAgeGeneratorService.RandomAgeGenerator(51, 60, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup4));
+            var rndMaleAgesForAgeGrp5 = _randomAgeGeneratorService.RandomAgeGenerator(61, 70, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup5));
 
-            var rndFemaleAgesForAgeGrp1 = _randomAgeGeneratorService.RandomAgeGenerator(21, 30, noOfFemalesInAgeGrp1);
-            var rndFemaleAgesForAgeGrp2 = _randomAgeGeneratorService.RandomAgeGenerator(31, 40, noOfFemalesInAgeGrp2);
-            var rndFemaleAgesForAgeGrp3 = _randomAgeGeneratorService.RandomAgeGenerator(41, 50, noOfFemalesInAgeGrp3);
-            var rndFemaleAgesForAgeGrp4 = _randomAgeGeneratorService.RandomAgeGenerator(51, 60, noOfFemalesInAgeGrp4);
-            var rndFemaleAgesForAgeGrp5 = _randomAgeGeneratorService.RandomAgeGenerator(61, 70, noOfFemalesInAgeGrp5);
+            var rndFemaleAgesForAgeGrp1 = _randomAgeGeneratorService.RandomAgeGenerator(21, 30, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup1));
+            var rndFemaleAgesForAgeGrp2 = _randomAgeGeneratorService.RandomAgeGenerator(31, 40, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup2));
+            var rndFemaleAgesForAgeGrp3 = _randomAgeGeneratorService.RandomAgeGenerator(41, 50, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup3));
+            var rndFemaleAgesForAgeGrp4 = _randomAgeGeneratorService.RandomAgeGenerator(51, 60, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup4));
+            var rndFemaleAgesForAgeGrp5 = _randomAgeGeneratorService.RandomAgeGenerator(61, 70, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup5));
+
+            #endregion
 
             var dt = new DataTable();
             var dr = dt.NewRow();
-            
+
             dt.Columns.Add("Age", typeof(int));
             dt.Columns.Add("Gender", typeof(string));
 
@@ -187,8 +188,7 @@ namespace Avansight.Business_Layer
 
             var param = new DynamicParameters();
             param.Add("@Patients", dt.AsTableValuedParameter("[dbo].[PatientTableType]"));
-            DataAccessService.Execute<Patient>("PatientSet", param);
-
+            return DataAccessService.Query<Patient>("PatientSet", param);
         }
     }
 }
