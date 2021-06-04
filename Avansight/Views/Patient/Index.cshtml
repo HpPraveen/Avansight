@@ -49,10 +49,10 @@
     </div>
 </div>
 <hr/>
-<div class="row">
-    <div class="col-md-6" id="barChart"></div>
+<div id="charts" class="row"> 
+    <div class="col-md-6" id="barChart">Age Distribution</div>
     <div class="col-md-1"></div>
-    <div class="col-md-5" id="pieChart"></div>
+    <div class="col-md-5" id="pieChart">Gender Distribution</div>
 </div>
 
 
@@ -66,6 +66,7 @@
         $(function() {
             $("#generatePatient").show();
             $("#saveGenerate").hide();
+            $("#charts").hide();
             GetPatientData();
             SavePatientData();
             ClearData();
@@ -98,10 +99,11 @@
                         dataType: "html",
                         url: '@Url.Action("GetPatientData", "Patient")',
                         data: { sampleSize: sampleSizeValue, maleWeight: maleWeightValue, femaleWeight: femaleWeightValue, patientDetails: ageGrpValue },
-                        success: function(data) {
-                            BarChart(data);
+                        success: function (data) {
+                            $("#charts").show();
                             $("#saveGenerate").show();
                             $("#generatePatient").hide();
+                            BarChart(data); 
                         },
                         error: function() {
                             alert("Error while inserting data");
