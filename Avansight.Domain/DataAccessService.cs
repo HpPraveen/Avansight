@@ -9,25 +9,23 @@ namespace Avansight.Domain
 {
     public class DataAccessService
     {
-        private const string Con = @"Data Source=HOWPAGE\PRAVEEN;Initial Catalog=PatientDB;Integrated Security=True";
-
-        public static T ExecuteScalar<T>(string sp, DynamicParameters param)
+        public static T ExecuteScalar<T>(string sp, DynamicParameters param, string con)
         {
-            using var sqlCon = new SqlConnection(Con);
+            using var sqlCon = new SqlConnection(con);
             sqlCon.Open();
             return (T)Convert.ChangeType(sqlCon.ExecuteScalar(sp, param, commandType: CommandType.StoredProcedure), typeof(T));
         }
 
-        public static void Execute<T>(string sp, DynamicParameters param)
+        public static void Execute<T>(string sp, DynamicParameters param, string con)
         {
-            using var sqlCon = new SqlConnection(Con);
+            using var sqlCon = new SqlConnection(con);
             sqlCon.Open();
             sqlCon.Execute(sp, param, commandType: CommandType.StoredProcedure);
         }
 
-        public static IEnumerable<T> Query<T>(string sp, DynamicParameters param = null)
+        public static IEnumerable<T> Query<T>(string sp, DynamicParameters param, string con)
         {
-            using var sqlCon = new SqlConnection(Con);
+            using var sqlCon = new SqlConnection(con);
             sqlCon.Open();
             var result = sqlCon.Query<T>(sp, param, commandType: CommandType.StoredProcedure);
             return result;

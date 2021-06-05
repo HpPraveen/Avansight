@@ -5,21 +5,24 @@ using System.Linq;
 using Avansight.Domain;
 using Avansight.Domain.DTO;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 
 namespace Avansight.Business_Layer
 {
     public class PatientService
     {
         private readonly RandomAgeGeneratorService _randomAgeGeneratorService;
+        private readonly IConfiguration _config;
 
-        public PatientService(RandomAgeGeneratorService randomAgeGeneratorService)
+        public PatientService(RandomAgeGeneratorService randomAgeGeneratorService, IConfiguration config)
         {
             _randomAgeGeneratorService = randomAgeGeneratorService;
+            _config = config;
         }
 
         public IEnumerable<Patient> GetPatients()
         {
-            var result = DataAccessService.Query<Patient>("PatientGet");
+            var result = DataAccessService.Query<Patient>("PatientGet", null, _config.GetConnectionString("AvansightDBCon"));
             return result.ToList();
         }
 
@@ -88,60 +91,60 @@ namespace Avansight.Business_Layer
         {
             #region Random age generator for  male & female age-groups
 
-            var rndMaleAgesForAgeGrp1 = _randomAgeGeneratorService.RandomAgeGenerator(21, 30, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup1));
-            var rndMaleAgesForAgeGrp2 = _randomAgeGeneratorService.RandomAgeGenerator(31, 40, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup2));
-            var rndMaleAgesForAgeGrp3 = _randomAgeGeneratorService.RandomAgeGenerator(41, 50, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup3));
-            var rndMaleAgesForAgeGrp4 = _randomAgeGeneratorService.RandomAgeGenerator(51, 60, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup4));
-            var rndMaleAgesForAgeGrp5 = _randomAgeGeneratorService.RandomAgeGenerator(61, 70, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup5));
+            var rndAgeGrp1MaleAges = _randomAgeGeneratorService.RandomAgeGenerator(21, 30, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup1));
+            var rndAgeGrp2MaleAges = _randomAgeGeneratorService.RandomAgeGenerator(31, 40, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup2));
+            var rndAgeGrp3MaleAges = _randomAgeGeneratorService.RandomAgeGenerator(41, 50, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup3));
+            var rndAgeGrp4MaleAges = _randomAgeGeneratorService.RandomAgeGenerator(51, 60, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup4));
+            var rndAgeGrp5MaleAges = _randomAgeGeneratorService.RandomAgeGenerator(61, 70, Convert.ToInt32(sessionPatientDetails.NoOfMalesInAgeGroup5));
 
-            var rndFemaleAgesForAgeGrp1 = _randomAgeGeneratorService.RandomAgeGenerator(21, 30, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup1));
-            var rndFemaleAgesForAgeGrp2 = _randomAgeGeneratorService.RandomAgeGenerator(31, 40, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup2));
-            var rndFemaleAgesForAgeGrp3 = _randomAgeGeneratorService.RandomAgeGenerator(41, 50, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup3));
-            var rndFemaleAgesForAgeGrp4 = _randomAgeGeneratorService.RandomAgeGenerator(51, 60, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup4));
-            var rndFemaleAgesForAgeGrp5 = _randomAgeGeneratorService.RandomAgeGenerator(61, 70, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup5));
+            var rndAgeGrp1FemaleAges = _randomAgeGeneratorService.RandomAgeGenerator(21, 30, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup1));
+            var rndAgeGrp2FemaleAges = _randomAgeGeneratorService.RandomAgeGenerator(31, 40, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup2));
+            var rndAgeGrp3FemaleAges = _randomAgeGeneratorService.RandomAgeGenerator(41, 50, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup3));
+            var rndAgeGrp4FemaleAges = _randomAgeGeneratorService.RandomAgeGenerator(51, 60, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup4));
+            var rndAgeGrp5FemaleAges = _randomAgeGeneratorService.RandomAgeGenerator(61, 70, Convert.ToInt32(sessionPatientDetails.NoOfFemalesInAgeGroup5));
 
             #endregion
 
-            var dt = new DataTable();
+            var dtPatients = new DataTable();
 
             #region Add Male Patients to dt
 
-            var dtMalesAgeGrp1 = CreateDataRow(rndMaleAgesForAgeGrp1, "Male");
-            var dtMalesAgeGrp2 = CreateDataRow(rndMaleAgesForAgeGrp2, "Male");
-            var dtMalesAgeGrp3 = CreateDataRow(rndMaleAgesForAgeGrp3, "Male");
-            var dtMalesAgeGrp4 = CreateDataRow(rndMaleAgesForAgeGrp4, "Male");
-            var dtMalesAgeGrp5 = CreateDataRow(rndMaleAgesForAgeGrp5, "Male");
+            var dtAgeGrp1Males = CreateDataTable(rndAgeGrp1MaleAges, "Male");
+            var dtAgeGrp2Males = CreateDataTable(rndAgeGrp2MaleAges, "Male");
+            var dtAgeGrp3Males = CreateDataTable(rndAgeGrp3MaleAges, "Male");
+            var dtAgeGrp4Males = CreateDataTable(rndAgeGrp4MaleAges, "Male");
+            var dtAgeGrp5Males = CreateDataTable(rndAgeGrp5MaleAges, "Male");
 
-            dt.Merge(dtMalesAgeGrp1);
-            dt.Merge(dtMalesAgeGrp2);
-            dt.Merge(dtMalesAgeGrp3);
-            dt.Merge(dtMalesAgeGrp4);
-            dt.Merge(dtMalesAgeGrp5);
+            dtPatients.Merge(dtAgeGrp1Males);
+            dtPatients.Merge(dtAgeGrp2Males);
+            dtPatients.Merge(dtAgeGrp3Males);
+            dtPatients.Merge(dtAgeGrp4Males);
+            dtPatients.Merge(dtAgeGrp5Males);
 
             #endregion
 
             #region Add Female Patients to dt
 
-            var dtFemalesAgeGrp1 = CreateDataRow(rndFemaleAgesForAgeGrp1, "Female");
-            var dtFemalesAgeGrp2 = CreateDataRow(rndFemaleAgesForAgeGrp2, "Female");
-            var dtFemalesAgeGrp3 = CreateDataRow(rndFemaleAgesForAgeGrp3, "Female");
-            var dtFemalesAgeGrp4 = CreateDataRow(rndFemaleAgesForAgeGrp4, "Female");
-            var dtFemalesAgeGrp5 = CreateDataRow(rndFemaleAgesForAgeGrp5, "Female");
+            var dtAgeGrp1Females = CreateDataTable(rndAgeGrp1FemaleAges, "Female");
+            var dtAgeGrp2Females = CreateDataTable(rndAgeGrp2FemaleAges, "Female");
+            var dtAgeGrp3Females = CreateDataTable(rndAgeGrp3FemaleAges, "Female");
+            var dtAgeGrp4Females = CreateDataTable(rndAgeGrp4FemaleAges, "Female");
+            var dtAgeGrp5Females = CreateDataTable(rndAgeGrp5FemaleAges, "Female");
 
-            dt.Merge(dtFemalesAgeGrp1);
-            dt.Merge(dtFemalesAgeGrp2);
-            dt.Merge(dtFemalesAgeGrp3);
-            dt.Merge(dtFemalesAgeGrp4);
-            dt.Merge(dtFemalesAgeGrp5);
+            dtPatients.Merge(dtAgeGrp1Females);
+            dtPatients.Merge(dtAgeGrp2Females);
+            dtPatients.Merge(dtAgeGrp3Females);
+            dtPatients.Merge(dtAgeGrp4Females);
+            dtPatients.Merge(dtAgeGrp5Females);
 
             #endregion
 
             var param = new DynamicParameters();
-            param.Add("@Patients", dt.AsTableValuedParameter("[dbo].[PatientTableType]"));
-            return DataAccessService.Query<Patient>("PatientSet", param);
+            param.Add("@Patients", dtPatients.AsTableValuedParameter("[dbo].[PatientTableType]"));
+            return DataAccessService.Query<Patient>("PatientSet", param, _config.GetConnectionString("AvansightDBCon"));
         }
 
-        public DataTable CreateDataRow(List<int> rndAgesForAgeGrp, string gender)
+        public DataTable CreateDataTable(List<int> rndAgesForAgeGrp, string gender)
         {
             var dt = new DataTable();
             var dr = dt.NewRow();
@@ -157,5 +160,6 @@ namespace Avansight.Business_Layer
 
             return dt;
         }
+
     }
 }
