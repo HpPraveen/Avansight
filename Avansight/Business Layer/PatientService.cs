@@ -103,92 +103,59 @@ namespace Avansight.Business_Layer
             #endregion
 
             var dt = new DataTable();
-            var dr = dt.NewRow();
-
-            dt.Columns.Add("Age", typeof(int));
-            dt.Columns.Add("Gender", typeof(string));
 
             #region Add Male Patients to dt
 
-            foreach (var rndAge in rndMaleAgesForAgeGrp1)
-            {
-                dr["Age"] = rndAge;
-                dr["Gender"] = "Male";
-                dt.Rows.Add(dr.ItemArray);
-            }
+            var dtMalesAgeGrp1 = CreateDataRow(rndMaleAgesForAgeGrp1, "Male");
+            var dtMalesAgeGrp2 = CreateDataRow(rndMaleAgesForAgeGrp2, "Male");
+            var dtMalesAgeGrp3 = CreateDataRow(rndMaleAgesForAgeGrp3, "Male");
+            var dtMalesAgeGrp4 = CreateDataRow(rndMaleAgesForAgeGrp4, "Male");
+            var dtMalesAgeGrp5 = CreateDataRow(rndMaleAgesForAgeGrp5, "Male");
 
-            foreach (var rndAge in rndMaleAgesForAgeGrp2)
-            {
-                dr["Age"] = rndAge;
-                dr["Gender"] = "Male";
-                dt.Rows.Add(dr.ItemArray);
-            }
-
-            foreach (var rndAge in rndMaleAgesForAgeGrp3)
-            {
-                dr["Age"] = rndAge;
-                dr["Gender"] = "Male";
-                dt.Rows.Add(dr.ItemArray);
-            }
-
-            foreach (var rndAge in rndMaleAgesForAgeGrp4)
-            {
-                dr["Age"] = rndAge;
-                dr["Gender"] = "Male";
-                dt.Rows.Add(dr.ItemArray);
-            }
-
-            foreach (var rndAge in rndMaleAgesForAgeGrp5)
-            {
-                dr["Age"] = rndAge;
-                dr["Gender"] = "Male";
-                dt.Rows.Add(dr.ItemArray);
-            }
+            dt.Merge(dtMalesAgeGrp1);
+            dt.Merge(dtMalesAgeGrp2);
+            dt.Merge(dtMalesAgeGrp3);
+            dt.Merge(dtMalesAgeGrp4);
+            dt.Merge(dtMalesAgeGrp5);
 
             #endregion
 
             #region Add Female Patients to dt
 
-            foreach (var rndAge in rndFemaleAgesForAgeGrp1)
-            {
-                dr["Age"] = rndAge;
-                dr["Gender"] = "Female";
-                dt.Rows.Add(dr.ItemArray);
-            }
+            var dtFemalesAgeGrp1 = CreateDataRow(rndFemaleAgesForAgeGrp1, "Female");
+            var dtFemalesAgeGrp2 = CreateDataRow(rndFemaleAgesForAgeGrp2, "Female");
+            var dtFemalesAgeGrp3 = CreateDataRow(rndFemaleAgesForAgeGrp3, "Female");
+            var dtFemalesAgeGrp4 = CreateDataRow(rndFemaleAgesForAgeGrp4, "Female");
+            var dtFemalesAgeGrp5 = CreateDataRow(rndFemaleAgesForAgeGrp5, "Female");
 
-            foreach (var rndAge in rndFemaleAgesForAgeGrp2)
-            {
-                dr["Age"] = rndAge;
-                dr["Gender"] = "Female";
-                dt.Rows.Add(dr.ItemArray);
-            }
-
-            foreach (var rndAge in rndFemaleAgesForAgeGrp3)
-            {
-                dr["Age"] = rndAge;
-                dr["Gender"] = "Female";
-                dt.Rows.Add(dr.ItemArray);
-            }
-
-            foreach (var rndAge in rndFemaleAgesForAgeGrp4)
-            {
-                dr["Age"] = rndAge;
-                dr["Gender"] = "Female";
-                dt.Rows.Add(dr.ItemArray);
-            }
-
-            foreach (var rndAge in rndFemaleAgesForAgeGrp5)
-            {
-                dr["Age"] = rndAge;
-                dr["Gender"] = "Female";
-                dt.Rows.Add(dr.ItemArray);
-            }
+            dt.Merge(dtFemalesAgeGrp1);
+            dt.Merge(dtFemalesAgeGrp2);
+            dt.Merge(dtFemalesAgeGrp3);
+            dt.Merge(dtFemalesAgeGrp4);
+            dt.Merge(dtFemalesAgeGrp5);
 
             #endregion
 
             var param = new DynamicParameters();
             param.Add("@Patients", dt.AsTableValuedParameter("[dbo].[PatientTableType]"));
             return DataAccessService.Query<Patient>("PatientSet", param);
+        }
+
+        public DataTable CreateDataRow(List<int> rndAgesForAgeGrp, string gender)
+        {
+            var dt = new DataTable();
+            var dr = dt.NewRow();
+            dt.Columns.Add("Age", typeof(int));
+            dt.Columns.Add("Gender", typeof(string));
+
+            foreach (var rndAge in rndAgesForAgeGrp)
+            {
+                dr["Age"] = rndAge;
+                dr["Gender"] = gender;
+                dt.Rows.Add(dr.ItemArray);
+            }
+
+            return dt;
         }
     }
 }
